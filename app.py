@@ -10,6 +10,13 @@ import io
 app = Flask(__name__)
 app.config.from_object(Config)
 
+# Ensure the upload folder exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Add configuration for PythonAnywhere
+if 'PYTHONANYWHERE_SITE' in os.environ:
+    app.config['UPLOAD_FOLDER'] = '/home/your_username/dha-lease-generator/uploads'
+
 @app.route('/', methods=['GET', 'POST'])
 def select_form():
     form = FormSelector()
@@ -62,4 +69,6 @@ def download_file(filename):
         return str(e)
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    # Only use debug mode when running locally
+    debug_mode = 'PYTHONANYWHERE_SITE' not in os.environ
+    app.run(debug=debug_mode) 
