@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="text-center">{{ form_type }}</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" class="needs-validation" novalidate>
+                {{ form.csrf_token }}
+                
+                {% for field in form if field.name != 'csrf_token' %}
+                <div class="mb-3">
+                    {{ field.label(class="form-label") }}
+                    {% if field.type == 'TextAreaField' %}
+                        {{ field(class="form-control", rows="3") }}
+                    {% else %}
+                        {{ field(class="form-control") }}
+                    {% endif %}
+                    
+                    {% if field.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in field.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <div class="mb-4">
+                    <label class="form-label">Output Format</label>
+                    <div class="d-flex gap-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="output_format" id="format_docx" value="docx" checked>
+                            <label class="form-check-label" for="format_docx">
+                                DOCX
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="output_format" id="format_markdown" value="markdown">
+                            <label class="form-check-label" for="format_markdown">
+                                Markdown
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="output_format" id="format_html" value="html">
+                            <label class="form-check-label" for="format_html">
+                                HTML
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">Generate Document</button>
+                    <a href="{{ url_for('select_form') }}" class="btn btn-secondary">Back to Form Selection</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 
